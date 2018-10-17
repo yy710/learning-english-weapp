@@ -50,6 +50,7 @@ Component({
           mMgr.src = this.properties.src
         }
         mMgr.title = this.properties.title
+        mMgr.startTime = 21;
       } else {
         this.setData({
           playing: false,
