@@ -1,5 +1,5 @@
 // 此处主机域名修改成腾讯云解决方案分配的域名
-const host = 'www.all2key.cn';
+const host = 'www.all2key.cn/learning-english';
 
 const config = {
   api_blink_url: 'http://bl.7yue.pro/v1/',
