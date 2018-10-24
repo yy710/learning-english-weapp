@@ -2,7 +2,7 @@
 const host = 'www.all2key.cn/learning-english';
 
 const config = {
-  api_blink_url: 'http://bl.7yue.pro/v1/',
+  api_blink_url: host,
   appkey: '访问www.7yue.pro获取appkey',
 
   // 下面的地址配合云端 Demo 工作

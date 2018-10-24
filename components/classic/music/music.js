@@ -4,6 +4,10 @@ import {
 } from '../classic-beh.js'
 
 let mMgr = wx.getBackgroundAudioManager()
+mMgr.onTimeUpdate(() => {
+  //console.log(mMgr.currentTime);
+  if (mMgr.currentTime >= 31.5) mMgr.pause();
+})
 
 Component({
   /**
