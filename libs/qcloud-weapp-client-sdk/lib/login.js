@@ -25,6 +25,7 @@ var LoginError = (function () {
 var getWxLoginResult = function getLoginCode(callback) {
     wx.login({
         success: function (loginResult) {
+          //console.log(loginResult);
             wx.getUserInfo({
                 success: function (userResult) {
                     callback(null, {
