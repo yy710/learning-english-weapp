@@ -25,7 +25,15 @@ var LoginError = (function () {
 var getWxLoginResult = function getLoginCode(callback) {
     wx.login({
         success: function (loginResult) {
-          //console.log(loginResult);
+          console.log(loginResult);
+          if(loginResult.code){
+            callback(null, { code: loginResult.code });
+          }else{
+            var error = new LoginError(constants.ERR_WX_GET_USER_INFO, '获取微信用户信息失败，请检查网络状态');
+            error.detail = userError;
+            callback(error, null);
+          }
+            /*
             wx.getUserInfo({
                 success: function (userResult) {
                     callback(null, {
@@ -42,6 +50,7 @@ var getWxLoginResult = function getLoginCode(callback) {
                     callback(error, null);
                 },
             });
+            */
         },
 
         fail: function (loginError) {
