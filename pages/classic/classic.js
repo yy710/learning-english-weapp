@@ -58,7 +58,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-    doLogin(app.globalData.qcloud);
+    //doLogin(app.globalData.qcloud);
     classicModel.getLatest((data) => {
       this._getLikeStatus(data.id, data.type)
       this.setData({
