@@ -44,6 +44,10 @@ class Session {
       .catch(log)
       .then(this.login);
   }
+
+  request(){
+    return _request('login')();
+  }
 }
 
 function log(res) {
