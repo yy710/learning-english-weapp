@@ -1,4 +1,7 @@
 class Request {
+  url;
+  method;
+  sid;
   constructor(sid = '', url = 'https://www.all2key.cn/learning-english/', method = 'GET') {
     this.url = url;
     this.method = method;
@@ -8,16 +11,17 @@ class Request {
   }
 
   send(action) {
+    let that = this;
     return function(data) {
-      return new Promise(function(resolve, reject) {
+      return new Promise((resolve, reject) => {
         //if (sid) data.sid = sid;
         wx.request({
-          url: this.url + action,
+          url: that.url + action,
           data: data,
-          method: this.method, // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+          method: that.method, // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
           header: {
             'Accept': 'application/json',
-            'sid': this.sid
+            'sid': that.sid
           }, // 设置请求的 header
           success: resolve,
           fail: reject,
@@ -30,23 +34,21 @@ class Request {
   }
 }
 
-let aaa = new Request();
-
 class Session {
-  cccc;
+  request;
   sid;
   userInfo;
   constructor() {
     this.sid = '';
-    this.cccc = 4564646;
+    this.request = new Request();
     this.userInfo = {};
   }
 
   checkSession() {
     return new Promise((resolve, reject) => {
       wx.checkSession({
-        success: resolve,
-        fail: reject
+        success: resolve(true),
+        fail: resolve(false)
       });
     });
   }
@@ -58,28 +60,31 @@ class Session {
     return new Promise((resolve, reject) => {
       wx.getStorage({
         key: 'sid',
-        success: function(res) {
-          //if(!res.data)reject();
-          resolve(res.data);
-        },
-        fail: reject
+        success: res => resolve(res.data),
+        fail: res => resolve(false)
       })
     });
   }
 
   login() {
-    return _login()
-      .then(log('login(): '))
-      .then(res => console.log(this.sid))
-      .catch(log('login(): '));
+    return wxlogin()
+      .then(log('wxlogin() return: '))
+      .then(this.request.send("login"))
+      .then(res => this.sid = res.data.sid)
+      .catch(log('catch error in login method: '));
   }
 
   start() {
-    console.log(this.sid)
     return Promise.all([this.checkSession(), this.getLocalSid()])
-      .then(log('user was signed!'))
-      .then(res => this.sid = res[1])
-      .then(this.login);
+      .then(log('Promise.all() return: '))
+      .then(res => {
+        if (res[0] === false || res[1] === false) {
+          return this.login();
+        } else {
+          return this.sid = res[1];
+        }
+      })
+      .catch(log("catch from start method: "));
   }
 }
 
@@ -90,15 +95,13 @@ function log(note = '') {
   };
 }
 
-function _login() {
+function wxlogin() {
   return new Promise((resolve, reject) => {
-    /*
     wx.login({
       success: (res) => resolve(res.code),
       fail: reject
     });
-    */
-    resolve('login ok!');
+    //resolve('login ok!');
   });
 }
 

@@ -10,8 +10,8 @@ App({
     //qcloud.setLoginUrl(config.service.loginUrl);
     let session = new Session();
     session.start().then(res=>{
-      //wx.setStorageSync('sid', session.sid);
-      //this.globalData.sid = session.sid;
+      wx.setStorageSync('sid', session.sid);
+      this.globalData.sid = session.sid;
     }).catch(console.log);
   },
 
