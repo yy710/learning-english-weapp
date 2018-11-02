@@ -1,27 +1,25 @@
 class Request {
   url;
   method;
-  sid;
-  constructor(sid = '', url = 'https://www.all2key.cn/learning-english/', method = 'GET') {
+  constructor(url = 'https://www.all2key.cn/learning-english/', method = 'GET') {
     this.url = url;
     this.method = method;
-    this.sid = sid;
     //this.action = '';
     //this.data = '';
   }
 
-  send(action) {
+  send(action, sid = '') {
     let that = this;
     return function(data) {
       return new Promise((resolve, reject) => {
         //if (sid) data.sid = sid;
         wx.request({
           url: that.url + action,
-          data: data,
+          data: {data: data},
           method: that.method, // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
           header: {
             'Accept': 'application/json',
-            'sid': that.sid
+            'sid': sid
           }, // 设置请求的 header
           success: resolve,
           fail: reject,
@@ -68,8 +66,8 @@ class Session {
 
   login() {
     return wxlogin()
-      .then(log('wxlogin() return: '))
       .then(this.request.send("login"))
+      .then(log("server reply: "))
       .then(res => this.sid = res.data.sid)
       .catch(log('catch error in login method: '));
   }
@@ -98,10 +96,9 @@ function log(note = '') {
 function wxlogin() {
   return new Promise((resolve, reject) => {
     wx.login({
-      success: (res) => resolve(res.code),
+      success: res => resolve(res.code),
       fail: reject
     });
-    //resolve('login ok!');
   });
 }
 
