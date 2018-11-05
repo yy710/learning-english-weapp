@@ -10,12 +10,12 @@ class Request {
 
   send(action, sid = '') {
     let that = this;
-    return function(data) {
+    return function(sendData) {
       return new Promise((resolve, reject) => {
         //if (sid) data.sid = sid;
         wx.request({
           url: that.url + action,
-          data: {data: data},
+          data: sendData,
           method: that.method, // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
           header: {
             'Accept': 'application/json',
@@ -45,8 +45,8 @@ class Session {
   checkSession() {
     return new Promise((resolve, reject) => {
       wx.checkSession({
-        success: resolve(true),
-        fail: resolve(false)
+        success: ()=>resolve(true),
+        fail: ()=>resolve(false)
       });
     });
   }
@@ -68,7 +68,7 @@ class Session {
     return wxlogin()
       .then(this.request.send("login"))
       .then(log("server reply: "))
-      .then(res => this.sid = res.data.sid)
+      .then(res => this.sid = res.data.sid?res.data.sid:null)
       .catch(log('catch error in login method: '));
   }
 
@@ -96,7 +96,7 @@ function log(note = '') {
 function wxlogin() {
   return new Promise((resolve, reject) => {
     wx.login({
-      success: res => resolve(res.code),
+      success: resolve,
       fail: reject
     });
   });
