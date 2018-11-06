@@ -1,52 +1,48 @@
-class Request {
-  url;
-  method;
-  constructor(url = 'https://www.all2key.cn/learning-english/', method = 'GET') {
-    this.url = url;
-    this.method = method;
-    //this.action = '';
-    //this.data = '';
-  }
-
-  send(action, sid = '') {
-    let that = this;
-    return function(sendData) {
-      return new Promise((resolve, reject) => {
-        //if (sid) data.sid = sid;
-        wx.request({
-          url: that.url + action,
-          data: sendData,
-          method: that.method, // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-          header: {
-            'Accept': 'application/json',
-            'sid': sid
-          }, // 设置请求的 header
-          success: resolve,
-          fail: reject,
-          complete: function() {
-            wx.hideToast();
-          }
-        });
-      });
-    };
-  }
-}
+import { _request } from '../utils/http.js';
+const log = require('../utils/util.js').log;
+import { config } from '../config.js';
 
 class Session {
-  request;
-  sid;
-  userInfo;
   constructor() {
     this.sid = '';
-    this.request = new Request();
     this.userInfo = {};
+  }
+
+  request(){ return Promise.reject("session.request no init!"); }
+
+  upload(tempFilePath){
+    let that = this;
+    return new Promise(function(resolve, reject){
+      wx.uploadFile({
+        url: `${config.api_blink_url}/upload`,
+        filePath: tempFilePath,
+        name: 'record',
+        header: {
+          'method': 'post',
+          "Content-Type": "multipart/form-data",
+          'accept': 'application/json',
+          'sid': that.sid //若有token，此处换上你的token，没有的话省略
+        },
+        formData: {
+          'user': 'test' //其他额外的formdata，可不写
+        },
+        success: function (res) {
+          console.log("upload success: ", res);
+          resolve(res);
+        },
+        fail: function (res) {
+          console.log('fail:', res);
+          reject(res);
+        }
+      });
+    });
   }
 
   checkSession() {
     return new Promise((resolve, reject) => {
       wx.checkSession({
-        success: ()=>resolve(true),
-        fail: ()=>resolve(false)
+        success: () => resolve(true),
+        fail: () => resolve(false)
       });
     });
   }
@@ -66,9 +62,13 @@ class Session {
 
   login() {
     return wxlogin()
-      .then(this.request.send("login"))
-      .then(log("server reply: "))
-      .then(res => this.sid = res.data.sid?res.data.sid:null)
+      .then(this.request("/login"))
+      .then(log("server reply for login: "))
+      .then(res =>{
+        if(!res.data.sid)return Promise.reject("server error!");
+        wx.setStorageSync('sid', res.data.sid);
+        return this.sid = res.data.sid;
+      })
       .catch(log('catch error in login method: '));
   }
 
@@ -77,20 +77,15 @@ class Session {
       .then(log('Promise.all() return: '))
       .then(res => {
         if (res[0] === false || res[1] === false) {
+          this.request = _request();
           return this.login();
         } else {
+          this.request = _request(res[1]);
           return this.sid = res[1];
         }
       })
       .catch(log("catch from start method: "));
   }
-}
-
-function log(note = '') {
-  return data => {
-    console.log(note, data);
-    return Promise.resolve(data);
-  };
 }
 
 function wxlogin() {
@@ -102,6 +97,4 @@ function wxlogin() {
   });
 }
 
-export {
-  Session
-};
+export { Session };

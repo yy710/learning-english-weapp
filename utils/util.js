@@ -10,11 +10,18 @@ const random = function generateMixed(n) {
 }
 
 function breakSection(text) {
-  
-  // let s=
+
+}
+
+function log(note = '') {
+  return data => {
+    console.log(note, data);
+    return Promise.resolve(data);
+  };
 }
 
 module.exports = {
   random: random,
-  breakSection: breakSection
+  breakSection: breakSection,
+  log: log
 }

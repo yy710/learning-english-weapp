@@ -1,23 +1,6 @@
-// 此处主机域名修改成腾讯云解决方案分配的域名
-const host = 'www.all2key.cn/learning-english';
-
 const config = {
-  api_blink_url: host,
-  appkey: '访问www.7yue.pro获取appkey',
-
-  // 下面的地址配合云端 Demo 工作
-  service: {
-    host,
-
-    // 登录地址，用于建立会话
-    loginUrl: `https://${host}/login`,
-
-    // 测试的请求地址，用于测试会话
-    requestUrl: `https://${host}/user`,
-
-    // 测试的信道服务地址
-    tunnelUrl: `https://${host}/tunnel`,
-  }
+  api_blink_url: 'https://www.all2key.cn/learning-english',
+  appkey: '访问www.7yue.pro获取appkey'
 };
 
 export { config }

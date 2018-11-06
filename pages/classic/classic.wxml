@@ -15,3 +15,11 @@
 </view>
 <!-- <navigator target="miniProgram" app-id="wx8ffc97ad5bcccc89" open-type="navigate">sdasd</navigator> -->
 <!-- <button bind:tap="onIP">IP</button> -->
+<view>
+<button bindtap="start" class='btn'>开始录音</button>
+<button bindtap="pause" class='btn'>暂停录音</button>
+<button bindtap="resume" class='btn'>继续录音</button>
+<button bindtap="stop" class='btn'>停止录音</button>
+<button bindtap="play" class='btn'>播放录音</button>
+<button bindtap="upload" class="btn">上传录音</button>
+</view>
