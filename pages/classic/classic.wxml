@@ -3,23 +3,24 @@
     <epsoide-cmp class="epsoide" index="{{classic.index}}" />
     <view class="like-container">
       <like-cmp bind:like="onLike" class="like" like="{{like}}" count="{{count}}" />
-        <img-btn-cmp class="share-btn" open-type="share">
-          <image class="share" slot="img" src="/images/icon/share.png" />
-        </img-btn-cmp>
+      <img-btn-cmp class="share-btn" open-type="share">
+        <image class="share" slot="img" src="/images/icon/share.png" />
+      </img-btn-cmp>
     </view>
   </view>
   <!-- <movie-cmp wx:if="{{classic.type==100}}" img="{{classic.image}}" content="{{classic.content}}" /> -->
   <music-cmp wx:if="{{classic.type==200}}" img="{{classic.image}}" content="{{classic.content}}" src="{{classic.url}}" title="{{classic.title}}" />
   <essay-cmp wx:if="{{classic.type==300}}" img="{{classic.image}}" content="{{classic.content}}" />
   <navi-cmp class="navi" latest="{{latest}}" first="{{first}}" catch:left="onNext" catch:right="onPrevious" title="{{classic.title}}" />
+
+  <view>
+    <button bindtap="start" class='btn'>开始录音</button>
+    <button bindtap="pause" class='btn'>暂停录音</button>
+    <button bindtap="resume" class='btn'>继续录音</button>
+    <button bindtap="stop" class='btn'>停止录音</button>
+    <button bindtap="play" class='btn'>播放录音</button>
+    <button bindtap="upload" class="btn">上传录音</button>
+  </view>
 </view>
 <!-- <navigator target="miniProgram" app-id="wx8ffc97ad5bcccc89" open-type="navigate">sdasd</navigator> -->
 <!-- <button bind:tap="onIP">IP</button> -->
-<view>
-<button bindtap="start" class='btn'>开始录音</button>
-<button bindtap="pause" class='btn'>暂停录音</button>
-<button bindtap="resume" class='btn'>继续录音</button>
-<button bindtap="stop" class='btn'>停止录音</button>
-<button bindtap="play" class='btn'>播放录音</button>
-<button bindtap="upload" class="btn">上传录音</button>
-</view>

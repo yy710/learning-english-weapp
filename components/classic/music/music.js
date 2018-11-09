@@ -1,4 +1,3 @@
-// components/classic/music/music.js
 import {
   classicBehavior
 } from '../classic-beh.js'

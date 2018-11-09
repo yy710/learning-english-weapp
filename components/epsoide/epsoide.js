@@ -32,11 +32,13 @@ Component({
 
   ready:function(){
     let date = new Date()
+    let _index = date.getDay()
     let month = date.getMonth()
     let year = date.getFullYear()
     this.setData({
       month:this.data.months[month],
-      year:year
+      year:year,
+      _index: _index
     })
   },
 
