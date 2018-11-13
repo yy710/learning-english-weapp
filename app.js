@@ -10,8 +10,8 @@ App({
     let session = new Session();
     session.start()
     .then(res =>this.globalData.session = session)
-    //.then(res =>{ return session.request('/')({ test: '76576576' }); })
-    //.then(log('onLaunch: '))
+    .then(res =>{ return session.request('/')({ test: '76576576' }); })
+    .then(log('onLaunch: '))
     .catch(console.log);
   },
 
