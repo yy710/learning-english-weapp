@@ -8,10 +8,14 @@ class Session {
     this.userInfo = {};
   }
 
+  /**
+   * The function will  be set dynamically 
+   */
   request(){ return Promise.reject("session.request no init!"); }
 
   upload(tempFilePath){
     let that = this;
+    console.log("(befor upload)this.sid: ", that.sid);
     return new Promise(function(resolve, reject){
       wx.uploadFile({
         url: `${config.api_blink_url}/upload`,
@@ -24,7 +28,7 @@ class Session {
           'sid': that.sid //若有token，此处换上你的token，没有的话省略
         },
         formData: {
-          'user': 'test' //其他额外的formdata，可不写
+          'sentenceId': 1 //其他额外的formdata，可不写
         },
         success: function (res) {
           console.log("upload success: ", res);
