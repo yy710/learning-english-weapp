@@ -9,7 +9,7 @@
     </view>
   </view>
   <!-- <movie-cmp wx:if="{{classic.type==100}}" img="{{classic.image}}" content="{{classic.content}}" /> -->
-  <music-cmp wx:if="{{classic.type==200}}" img="{{classic.image}}" content="{{classic.content}}" src="{{classic.url}}" title="{{classic.title}}" />
+  <music-cmp wx:if="{{classic.type==200}}" img="{{sentence.image}}" content="{{sentence.text[0]}}" src="{{sentence.audio.src}}" title="{{sentence.title}}" />
   <essay-cmp wx:if="{{classic.type==300}}" img="{{classic.image}}" content="{{classic.content}}" />
   <navi-cmp class="navi" latest="{{latest}}" first="{{first}}" catch:left="onNext" catch:right="onPrevious" title="{{classic.title}}" />
 

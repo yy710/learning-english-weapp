@@ -9,7 +9,8 @@ const recorderManager = wx.getRecorderManager();
 const innerAudioContext = wx.createInnerAudioContext();
 
 let app = getApp();
-console.log("app: ", app);
+const session = app.globalData.session;
+//console.log("app: ", app);
 
 // 显示繁忙提示
 var showBusy = text => wx.showToast({
@@ -48,7 +49,8 @@ Page({
     latest: true,
     first: false,
     like: false,
-    count: 0
+    count: 0,
+    sentence: {}
   },
 
   //开始录音
@@ -98,6 +100,16 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
+    session.start()
+    .then(res=>{
+      session.sid = res;
+      return session.request('/get-sentence')()
+        .then(log("get-sentence: "))
+        .then(res => this.setData({ sentence: res.data }))
+    })
+    .catch(log("session.start catch error: "));
+
+
     recorderManager.onStart(() => {
       console.log('recorder start')
     });
