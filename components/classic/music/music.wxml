@@ -2,5 +2,6 @@
   <image src="{{img}}" class="classic-img {{playing?'rotation':''}}" />
   <image class="player-img" bind:tap = "onPlay" src="{{playing?playingUrl:waittingUrl}}" />
   <!-- <image class='tag' src="images/music@tag.png" /> -->
-  <text class="content">{{content}}</text>
+  <!-- <text class="content">{{content}}</text> -->
+  <rich-text nodes="{{nodes}}"></rich-text>
 </view>

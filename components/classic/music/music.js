@@ -16,13 +16,34 @@ Component({
 
   properties: {
     src: String,
-    title:String
+    title: String
   },
 
   /**
    * 组件的初始数据
    */
   data: {
+    nodes: [{
+      name: 'span',
+      attrs: {
+        class: 'div_class',
+        style: 'line-height: 60px; color: black;',
+      },
+      children: [{
+          type: 'text',
+          text: '122345777557'
+        }]
+    },{
+      name: 'span',
+      attrs:{
+        style: 'color: red'
+      },
+      children:[{
+        type: 'text',
+        text: '67565675757'
+      }]
+    }],
+
     playing: false,
     waittingUrl: 'images/player@waitting.png',
     playingUrl: 'images/player@playing.png'
@@ -46,10 +67,9 @@ Component({
         this.setData({
           playing: true,
         })
-        if(mMgr.src == this.properties.src){
+        if (mMgr.src == this.properties.src) {
           mMgr.play()
-        }
-        else{
+        } else {
           mMgr.src = this.properties.src
         }
         mMgr.title = this.properties.title
@@ -86,11 +106,11 @@ Component({
         this._recoverPlaying()
       })
       mMgr.onStop(() => {
-        this._recoverPlaying()
-      }),
-      mMgr.onEnded(()=>{
-        this._recoverPlaying()
-      })
+          this._recoverPlaying()
+        }),
+        mMgr.onEnded(() => {
+          this._recoverPlaying()
+        })
     }
 
   }
