@@ -1,7 +1,15 @@
-import { log } from '../../utils/util.js';
-import { config } from '../../config.js';
-import { ClassicModel } from '../../models/classic.js';
-import { LikeModel } from '../../models/like.js';
+import {
+  log
+} from '../../utils/util.js';
+import {
+  config
+} from '../../config.js';
+import {
+  ClassicModel
+} from '../../models/classic.js';
+import {
+  LikeModel
+} from '../../models/like.js';
 let classicModel = new ClassicModel();
 let likeModel = new LikeModel();
 
@@ -54,7 +62,7 @@ Page({
   },
 
   //开始录音
-  start: function () {
+  start: function() {
     const options = {
       duration: 10000, //指定录音的时长，单位 ms
       sampleRate: 16000, //采样率
@@ -67,22 +75,22 @@ Page({
   },
 
   //暂停录音
-  pause: function () {
+  pause: function() {
     recorderManager.pause();
   },
 
   //继续录音
-  resume: function () {
+  resume: function() {
     recorderManager.resume();
   },
 
   //停止录音
-  stop: function () {
+  stop: function() {
     recorderManager.stop();
   },
 
   //播放声音
-  play: function () {
+  play: function() {
     innerAudioContext.autoplay = true;
     innerAudioContext.src = this.tempFilePath;
     innerAudioContext.onPlay(() => console.log('开始播放'));
@@ -92,7 +100,7 @@ Page({
     });
   },
 
-  upload: function(){
+  upload: function() {
     app.globalData.session.upload(this.tempFilePath).then(log("upload replay: ")).catch(console.log);
   },
 
@@ -101,13 +109,15 @@ Page({
    */
   onLoad: function(options) {
     session.start()
-    .then(res=>{
-      session.sid = res;
-      return session.request('/get-sentence')()
-        .then(log("get-sentence: "))
-        .then(res => this.setData({ sentence: res.data }))
-    })
-    .catch(log("session.start catch error: "));
+      .then(res => {
+        session.sid = res;
+        return session.request('/get-sentence')()
+          .then(log("get-sentence: "))
+          .then(res => this.setData({
+            sentence: res.data
+          }))
+      })
+      .catch(log("session.start catch error: "));
 
 
     recorderManager.onStart(() => {

@@ -10,7 +10,7 @@ import {
 
 App({
   onLaunch() {
-    this.globalData.session = new Session()
+    this.globalData.session = new Session();
   },
   globalData: {
     session: null,

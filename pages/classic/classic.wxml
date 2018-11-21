@@ -14,6 +14,7 @@
   <navi-cmp class="navi" latest="{{latest}}" first="{{first}}" catch:left="onNext" catch:right="onPrevious" title="{{classic.title}}" />
 
   <view class="record">
+  <image class="vol"></image>
     <button bindtap="start" size='mini'>开始录音</button>
     <!--
     <button bindtap="pause" class='btn'>暂停录音</button>
