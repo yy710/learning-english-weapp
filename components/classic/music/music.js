@@ -8,6 +8,18 @@ mMgr.onTimeUpdate(() => {
   if (mMgr.currentTime >= 31.5) mMgr.pause();
 })
 
+let aaa = [];
+merge([
+  ['was', 10],
+  ['his', 99],
+  ['has', 80],
+  ['hell', 88],
+  ['kjhkjhk', 89],
+  ['is', 98],
+  ['100分', 100]
+], aaa);
+console.log("merge: ", aaa);
+
 Component({
   /**
    * 组件的属性列表
@@ -23,24 +35,34 @@ Component({
    * 组件的初始数据
    */
   data: {
-    nodes: [{
+    nodes: aaa,
+    _nodes: [{
       name: 'span',
       attrs: {
-        class: 'div_class',
-        style: 'line-height: 60px; color: black;',
+        class: 'excellent'
+        //style: 'line-height: 60px; color: black;',
       },
       children: [{
-          type: 'text',
-          text: '122345777557'
-        }]
-    },{
+        type: 'text',
+        text: '122345777557'
+      }]
+    }, {
       name: 'span',
-      attrs:{
-        style: 'color: red'
+      attrs: {
+        class: 'pass'
       },
-      children:[{
+      children: [{
         type: 'text',
         text: '67565675757'
+      }]
+    }, {
+      name: 'span',
+      attrs: {
+        class: 'fail'
+      },
+      children: [{
+        type: 'text',
+        text: '675kjkjhkjhkjh5757'
       }]
     }],
 
@@ -115,3 +137,81 @@ Component({
 
   }
 })
+
+function covert(arr) {
+  arr.map(word => {
+    let color = 'fail';
+    if (arr[1] >= 90) {
+      color = 'excellent';
+    } else if (arr[1] > 70) {
+      color = 'pass';
+    }
+
+    let nodes = {
+      name: 'span',
+      attrs: {
+        class: color
+        //style: 'line-height: 60px; color: black;',
+      },
+      children: [{
+        type: 'text',
+        text: arr[0]
+      }]
+    }
+    return nodes;
+  });
+}
+
+function merge(arrs, results, color = null) {
+  //console.log("arrs: ", arrs);
+  if (arrs.length === 0) {
+    //console.log("results: ", results);
+    return;
+  }
+  const word = arrs.shift();
+  if (word[1] >= 90) {
+    if (color === 'excellent') {
+      let result = results.pop();
+      result.children[0].text += word[0];
+      results.push(result);
+    } else {
+      color = 'excellent';
+      pushWord(results, word, 'excellent');
+    }
+  } else if (word[1] >= 70) {
+    if (color === 'pass') {
+      let result = results.pop();
+      result.children[0].text += word[0];
+      results.push(result);
+    } else {
+      color = 'pass';
+      pushWord(results, word, 'pass');
+    }
+  } else {
+    if (color === 'fail') {
+      let result = results.pop();
+      result.children[0].text += word[0];
+      results.push(result);
+    } else {
+      color = 'fail';
+      pushWord(results, word, 'fail');
+    }
+  }
+  //console.log("results: ", results);
+  merge(arrs, results, color);
+}
+
+function pushWord(arrs, word, color) {
+  arrs.push({
+    name: 'span',
+    attrs: {
+      class: color
+      //style: 'line-height: 60px; color: black;',
+    },
+    children: [{
+      type: 'text',
+      text: word[0]
+    }]
+  });
+  return arrs;
+}
