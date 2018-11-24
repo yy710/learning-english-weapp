@@ -162,6 +162,17 @@ function covert(arr) {
   });
 }
 
+function createNodes(sentence = '', evaluations = [], results = []){
+  if(sentence.length === 0 || evaluations.length === 0)return;
+
+  const word = evaluations.shift();
+  const start = sentence.indexOf(word);
+  const end = start + word.length;
+
+  pushWord(results, word.substring(0, start));
+  pushWord(results, word.substring(start,end));  
+}
+
 function merge(arrs, results, color = null) {
   //console.log("arrs: ", arrs);
   if (arrs.length === 0) {
