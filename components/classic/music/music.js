@@ -9,16 +9,15 @@ mMgr.onTimeUpdate(() => {
 })
 
 let aaa = [];
-merge([
+createNodes('#$@ was, his, hell;is:100分？', [
   ['was', 10],
   ['his', 99],
-  ['has', 80],
   ['hell', 88],
-  ['kjhkjhk', 89],
   ['is', 98],
+  ['hellow', 9],
   ['100分', 100]
 ], aaa);
-console.log("merge: ", aaa);
+console.log("createNodes: ", aaa);
 
 Component({
   /**
@@ -138,39 +137,23 @@ Component({
   }
 })
 
-function covert(arr) {
-  arr.map(word => {
-    let color = 'fail';
-    if (arr[1] >= 90) {
-      color = 'excellent';
-    } else if (arr[1] > 70) {
-      color = 'pass';
-    }
-
-    let nodes = {
-      name: 'span',
-      attrs: {
-        class: color
-        //style: 'line-height: 60px; color: black;',
-      },
-      children: [{
-        type: 'text',
-        text: arr[0]
-      }]
-    }
-    return nodes;
-  });
-}
-
-function createNodes(sentence = '', evaluations = [], results = []){
-  if(sentence.length === 0 || evaluations.length === 0)return;
+function createNodes(sentence = '', evaluations = [], results = []) {
+  //console.log("sentence: ", sentence);
+  if (sentence.length === 0 || evaluations.length === 0) return;
 
   const word = evaluations.shift();
-  const start = sentence.indexOf(word);
-  const end = start + word.length;
+  const start = sentence.indexOf(word[0]);
+  let end = start + word[0].length;
 
-  pushWord(results, word.substring(0, start));
-  pushWord(results, word.substring(start,end));  
+  //console.log("sentence.substring(0, start): ", sentence.substring(0, start));
+  if(start !== -1){
+    pushWord(results, [sentence.substring(0, start)]);
+    pushWord(results, word);
+  }else{
+    end = 0;
+  }
+
+  createNodes(sentence.substring(end), evaluations, results);
 }
 
 function merge(arrs, results, color = null) {
@@ -212,7 +195,13 @@ function merge(arrs, results, color = null) {
   merge(arrs, results, color);
 }
 
-function pushWord(arrs, word, color) {
+function pushWord(arrs, word) {
+  console.log("word: ", word);
+  let color = 'pass';
+  if (word[1] >= 90) color = 'excellent';
+  else if (word[1] < 70) color = 'fail';
+  else if (!word[1]) color = 'nomal';
+
   arrs.push({
     name: 'span',
     attrs: {

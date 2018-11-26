@@ -56,7 +56,8 @@
 }
 
 .excellent{
-  color :darkgreen;
+  color: darkseagreen;
+  /* font-weight: bold */
 }
 
 .pass{
@@ -64,5 +65,10 @@
 }
 
 .fail{
-  color: darkred
+  color: red;
+  font-weight: bold;
+}
+
+.nomal{
+  color:darkgray
 }
