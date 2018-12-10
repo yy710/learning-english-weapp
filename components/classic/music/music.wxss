@@ -19,12 +19,12 @@
 }
 
 .tag{
-  width:44rpx;
-  height:127rpx;
+  width:60rpx;
+  height:50rpx;
   position: relative;
   bottom: 160rpx;
   right:310rpx; 
-}
+  }
 
 .rotation {
   -webkit-transform: rotate(360deg);

@@ -1,12 +1,6 @@
-import {
-  classicBehavior
-} from '../classic-beh.js'
-
-let mMgr = wx.getBackgroundAudioManager()
-mMgr.onTimeUpdate(() => {
-  //console.log(mMgr.currentTime);
-  if (mMgr.currentTime >= 31.5) mMgr.pause();
-})
+//import { classicBehavior } from '../classic-beh.js';
+const mMgr = wx.getBackgroundAudioManager();
+//const mMgr = wx.createInnerAudioContext();
 
 let aaa = [];
 createNodes('#$@ was, his, hell;is:100分？', [
@@ -17,60 +11,46 @@ createNodes('#$@ was, his, hell;is:100分？', [
   ['hellow', 9],
   ['100分', 100]
 ], aaa);
-console.log("createNodes: ", aaa);
+//console.log("createNodes: ", aaa);
 
 Component({
-  /**
-   * 组件的属性列表
-   */
-  behaviors: [classicBehavior],
-
+  //behaviors: [classicBehavior],
   properties: {
-    src: String,
-    title: String
+    sentence:{
+      type: Object,
+      value: {},
+      observer: function (newVal, oldVal, changedPath){
+        console.log("sentence newVal: ", newVal);
+        if(!newVal)return;
+        let _nodes = [];
+        createNodes(newVal.text[0], [], _nodes);
+        console.log("_nodes: ", _nodes);
+        this.setData({ st: newVal, nodes: _nodes });
+      }
+    },
+    rate:{
+      type: Array,
+      value: {},
+      observer: function (newVal, oldVal, changedPath){
+        console.log("rate changed: ", newVal);
+      }
+    }
   },
 
-  /**
-   * 组件的初始数据
-   */
   data: {
-    nodes: aaa,
-    _nodes: [{
-      name: 'span',
-      attrs: {
-        class: 'excellent'
-        //style: 'line-height: 60px; color: black;',
-      },
-      children: [{
-        type: 'text',
-        text: '122345777557'
-      }]
-    }, {
-      name: 'span',
-      attrs: {
-        class: 'pass'
-      },
-      children: [{
-        type: 'text',
-        text: '67565675757'
-      }]
-    }, {
-      name: 'span',
-      attrs: {
-        class: 'fail'
-      },
-      children: [{
-        type: 'text',
-        text: '675kjkjhkjhkjh5757'
-      }]
-    }],
-
+    st: {},
+    nodes: [],
     playing: false,
     waittingUrl: 'images/player@waitting.png',
     playingUrl: 'images/player@playing.png'
   },
 
   attached: function() {
+    const st = this.properties.sentence;
+    mMgr.onTimeUpdate(() => {
+      //console.log(mMgr.currentTime);
+      if (mMgr.currentTime >= st.endTime) mMgr.stop();
+    })
     this._recoverPlaying()
     this._monitorSwitch()
   },
@@ -79,38 +59,39 @@ Component({
     // wx.pauseBackgroundAudio()
   },
 
-  /**
-   * 组件的方法列表
-   */
   methods: {
+    onRecord: function(){
+
+    },
+
     onPlay: function(event) {
+      const st = this.properties.sentence;
+      if(!st)return;
       if (!this.data.playing) {
-        this.setData({
-          playing: true,
-        })
-        if (mMgr.src == this.properties.src) {
-          mMgr.play()
+        this.setData({ playing: true });
+        if (mMgr.src == st.audio.src) {
+          mMgr.play();
         } else {
-          mMgr.src = this.properties.src
+          mMgr.src = st.audio.src;
         }
-        mMgr.title = this.properties.title
-        mMgr.startTime = 21;
+        mMgr.title = st.title;
+        mMgr.startTime = st.startTime;
       } else {
-        this.setData({
-          playing: false,
-        })
-        mMgr.pause()
+        this.setData({ playing: false });
+        mMgr.pause();
       }
     },
 
     _recoverPlaying: function() {
+      const st = this.properties.sentence;
+      if(!st)return;
       if (mMgr.paused) {
         this.setData({
           playing: false
         })
         return
       }
-      if (mMgr.src == this.properties.src) {
+      if (mMgr.src == st.audio.src) {
         if (!mMgr.paused) {
           this.setData({
             playing: true
@@ -133,9 +114,8 @@ Component({
           this._recoverPlaying()
         })
     }
-
   }
-})
+});
 
 function createNodes(sentence = '', evaluations = [], results = []) {
   //console.log("sentence: ", sentence);
@@ -154,45 +134,6 @@ function createNodes(sentence = '', evaluations = [], results = []) {
   }
 
   createNodes(sentence.substring(end), evaluations, results);
-}
-
-function merge(arrs, results, color = null) {
-  //console.log("arrs: ", arrs);
-  if (arrs.length === 0) {
-    //console.log("results: ", results);
-    return;
-  }
-  const word = arrs.shift();
-  if (word[1] >= 90) {
-    if (color === 'excellent') {
-      let result = results.pop();
-      result.children[0].text += word[0];
-      results.push(result);
-    } else {
-      color = 'excellent';
-      pushWord(results, word, 'excellent');
-    }
-  } else if (word[1] >= 70) {
-    if (color === 'pass') {
-      let result = results.pop();
-      result.children[0].text += word[0];
-      results.push(result);
-    } else {
-      color = 'pass';
-      pushWord(results, word, 'pass');
-    }
-  } else {
-    if (color === 'fail') {
-      let result = results.pop();
-      result.children[0].text += word[0];
-      results.push(result);
-    } else {
-      color = 'fail';
-      pushWord(results, word, 'fail');
-    }
-  }
-  //console.log("results: ", results);
-  merge(arrs, results, color);
 }
 
 function pushWord(arrs, word) {

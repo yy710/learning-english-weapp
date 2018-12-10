@@ -1,22 +1,12 @@
-import {
-  log
-} from '../../utils/util.js';
-import {
-  config
-} from '../../config.js';
-import {
-  ClassicModel
-} from '../../models/classic.js';
-import {
-  LikeModel
-} from '../../models/like.js';
+import {log} from '../../utils/util.js';
+import {config} from '../../config.js';
+import {ClassicModel} from '../../models/classic.js';
+import {LikeModel} from '../../models/like.js';
 let classicModel = new ClassicModel();
 let likeModel = new LikeModel();
-
 const recorderManager = wx.getRecorderManager();
 const innerAudioContext = wx.createInnerAudioContext();
-
-let app = getApp();
+const app = getApp();
 const session = app.globalData.session;
 //console.log("app: ", app);
 
@@ -43,10 +33,27 @@ var showModel = (title, content) => {
   });
 };
 
-Page({
-  /**
-   * 页面的初始数据
-   */
+recorderManager.onStart(() => {
+  console.log('recorder start')
+});
+//错误回调
+recorderManager.onError((res) => {
+  console.log(res);
+});
+recorderManager.onPause((res) => {
+  console.log('暂停录音')
+});
+recorderManager.onStart(() => {
+  console.log('重新开始录音')
+});
+recorderManager.onStop(res => {
+  this.tempFilePath = res.tempFilePath;
+  console.log('停止录音', res.tempFilePath);
+  //const { tempFilePath } = res;
+});
+
+let pageJson = {
+  //页面的初始数据
   data: {
     classic: {
       type: 200,
@@ -58,11 +65,10 @@ Page({
     first: false,
     like: false,
     count: 0,
-    sentence: {}
+    sentences: []
   },
-
   //开始录音
-  start: function() {
+  start: function () {
     const options = {
       duration: 10000, //指定录音的时长，单位 ms
       sampleRate: 16000, //采样率
@@ -73,24 +79,20 @@ Page({
     };
     recorderManager.start(options);
   },
-
   //暂停录音
-  pause: function() {
+  pause: function () {
     recorderManager.pause();
   },
-
   //继续录音
-  resume: function() {
+  resume: function () {
     recorderManager.resume();
   },
-
   //停止录音
-  stop: function() {
+  stop: function () {
     recorderManager.stop();
   },
-
-  //播放声音
-  play: function() {
+  //播放录音
+  play: function () {
     innerAudioContext.autoplay = true;
     innerAudioContext.src = this.tempFilePath;
     innerAudioContext.onPlay(() => console.log('开始播放'));
@@ -99,64 +101,31 @@ Page({
       console.log(res.errCode);
     });
   },
-
-  upload: function() {
+  //上传录音到服务器
+  upload: function () {
     app.globalData.session.upload(this.tempFilePath).then(log("upload replay: ")).catch(console.log);
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function(options) {
+  //生命周期函数--监听页面加载
+  onLoad: function (options) {
+    // 开始会话
     session.start()
       .then(res => {
         session.sid = res;
         return session.request('/get-sentence')()
           .then(log("get-sentence: "))
           .then(res => this.setData({
-            sentence: res.data
+            sentences: res.data
           }))
       })
       .catch(log("session.start catch error: "));
 
-
-    recorderManager.onStart(() => {
-      console.log('recorder start')
+    classicModel.getLatest(data => {
+      this._getLikeStatus(data.id, data.type);
+      this.setData({ classic: { type: 300 } });
     });
-    //错误回调
-    recorderManager.onError((res) => {
-      console.log(res);
-    });
-    recorderManager.onPause((res) => {
-      console.log('暂停录音')
-    });
-    recorderManager.onStart(() => {
-      console.log('重新开始录音')
-    });
-    //错误回调
-    recorderManager.onError((res) => {
-      console.log(res);
-    });
-    recorderManager.onStop((res) => {
-      this.tempFilePath = res.tempFilePath;
-      console.log('停止录音', res.tempFilePath);
-      //const { tempFilePath } = res;
-    });
-
-
-    //doLogin(app.globalData.qcloud);
-    classicModel.getLatest((data) => {
-      this._getLikeStatus(data.id, data.type)
-      this.setData({
-        //classic:data
-        classic: {
-          type: 300
-        }
-      })
-    })
   },
 
-  onPrevious: function(event) {
+  onPrevious: function (event) {
     let index = this.data.classic.index
     classicModel.getPrevious(index, (data) => {
       if (data) {
@@ -172,7 +141,7 @@ Page({
     })
   },
 
-  onNext: function(event) {
+  onNext: function (event) {
     let index = this.data.classic.index
     classicModel.getNext(index, (data) => {
       if (data) {
@@ -188,17 +157,16 @@ Page({
     })
   },
 
-  onLike: function(event) {
-    let like_or_cancel = event.detail.behavior
-    likeModel.like(like_or_cancel, this.data.classic.id, this.data.classic.type)
+  onLike: function (event) {
+    let like_or_cancel = event.detail.behavior;
+    likeModel.like(like_or_cancel, this.data.classic.id, this.data.classic.type);
   },
 
-  _getLikeStatus: function(cid, type) {
-    likeModel.getClassicLikeStatus(cid, type, (data) => {
-      this.setData({
-        like: data.like_status,
-        count: data.fav_nums
-      })
+  _getLikeStatus: function (cid, type) {
+    likeModel.getClassicLikeStatus(cid, type, data => {
+      this.setData({ like: data.like_status, count: data.fav_nums });
     })
   }
-});
+};
+
+Page(pageJson);

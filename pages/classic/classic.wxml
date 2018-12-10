@@ -9,12 +9,11 @@
     </view>
   </view>
   <!-- <movie-cmp wx:if="{{classic.type==100}}" img="{{classic.image}}" content="{{classic.content}}" /> -->
-  <music-cmp wx:if="{{classic.type==200}}" img="{{sentence[0].image}}" content="{{sentence[0].text[0]}}" src="{{sentence[0].audio.src}}" title="{{sentence[0].title}}" />
-  <essay-cmp wx:if="{{classic.type==300}}" img="{{classic.image}}" content="{{classic.content}}" />
-  <navi-cmp class="navi" latest="{{latest}}" first="{{first}}" catch:left="onNext" catch:right="onPrevious" title="{{classic.title}}" />
+  <music-cmp wx:if="{{classic.type==200}}" sentence = "{{sentences[1]}}" rate="{{[]}}" />
+  <!-- <essay-cmp wx:if="{{classic.type==300}}" img="{{classic.image}}" content="{{classic.content}}" /> -->
+  <navi-cmp class="navi" latest="{{latest}}" first="{{first}}" catch:left="onNext" catch:right="onPrevious" title="{{sentence[0].title}}" />
 
   <view class="record">
-    <image class="vol"></image>
     <button bindtap="start" size='mini'>开始录音</button>
     <!--
     <button bindtap="pause" class='btn'>暂停录音</button>
