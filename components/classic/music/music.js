@@ -1,17 +1,7 @@
 //import { classicBehavior } from '../classic-beh.js';
 const mMgr = wx.getBackgroundAudioManager();
 //const mMgr = wx.createInnerAudioContext();
-
-let aaa = [];
-createNodes('#$@ was, his, hell;is:100分？', [
-  ['was', 10],
-  ['his', 99],
-  ['hell', 88],
-  ['is', 98],
-  ['hellow', 9],
-  ['100分', 100]
-], aaa);
-//console.log("createNodes: ", aaa);
+let st = {};
 
 Component({
   //behaviors: [classicBehavior],
@@ -20,10 +10,13 @@ Component({
       type: Object,
       value: {},
       observer: function (newVal, oldVal, changedPath){
+        st = newVal;
         console.log("sentence newVal: ", newVal);
         if(!newVal)return;
         let _nodes = [];
-        createNodes(newVal.text[0], [], _nodes);
+        let text_arr = newVal.text[1].split(" ").map(item => [item, 90]);
+        //console.log("text_arr: ", text_arr);
+        createNodes(newVal.text[0], text_arr, _nodes);
         console.log("_nodes: ", _nodes);
         this.setData({ st: newVal, nodes: _nodes });
       }
@@ -46,10 +39,10 @@ Component({
   },
 
   attached: function() {
-    const st = this.properties.sentence;
+    //const st = this.properties.sentence;
     mMgr.onTimeUpdate(() => {
       //console.log(mMgr.currentTime);
-      if (mMgr.currentTime >= st.endTime) mMgr.stop();
+      if (mMgr.currentTime >= st.audio.endTime) mMgr.stop();
     })
     this._recoverPlaying()
     this._monitorSwitch()
@@ -65,7 +58,7 @@ Component({
     },
 
     onPlay: function(event) {
-      const st = this.properties.sentence;
+      //const st = this.properties.sentence;
       if(!st)return;
       if (!this.data.playing) {
         this.setData({ playing: true });
@@ -75,7 +68,7 @@ Component({
           mMgr.src = st.audio.src;
         }
         mMgr.title = st.title;
-        mMgr.startTime = st.startTime;
+        mMgr.startTime = st.audio.startTime;
       } else {
         this.setData({ playing: false });
         mMgr.pause();
@@ -83,7 +76,7 @@ Component({
     },
 
     _recoverPlaying: function() {
-      const st = this.properties.sentence;
+      //const st = this.properties.sentence;
       if(!st)return;
       if (mMgr.paused) {
         this.setData({
@@ -136,8 +129,12 @@ function createNodes(sentence = '', evaluations = [], results = []) {
   createNodes(sentence.substring(end), evaluations, results);
 }
 
+/**
+ * @param arrs: return arrary
+ * @param word: array, example: ['who', 60]
+ */
 function pushWord(arrs, word) {
-  console.log("word: ", word);
+  //console.log("word: ", word);
   let color = 'pass';
   if (word[1] >= 90) color = 'excellent';
   else if (word[1] < 70) color = 'fail';
