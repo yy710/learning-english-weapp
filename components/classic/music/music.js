@@ -42,9 +42,10 @@ Component({
     st: {},
     nodes: [],
     playing: false,
+    playing2: false,
     recording: false,
-    waitRecordingUrl: 'images/mic-outline2.png',
-    recordingUrl: 'images/mic-off-outline2.png',
+    waitRecordingUrl: 'images/record3.png',
+    recordingUrl: 'images/record10.gif',
     speakingUrl: "images/speaker-gif-animation2.gif",
     noSpeakingUrl: "images/speaker-gif-animation.png"
   },
@@ -72,6 +73,10 @@ Component({
         playing: audio.paused
       });
       audio.paused ? audio.play() : audio.pause();
+    },
+
+    onPlay2: function(){
+
     }
   }
 });

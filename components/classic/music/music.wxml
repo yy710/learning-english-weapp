@@ -1,7 +1,10 @@
 <view class="classic-container">
-  <image src="{{st.image}}" class="classic-img {{recording?'rotation':''}}" />
-  <image class="player-img" bind:tap = "onRecord" src="{{recording?recordingUrl:waitRecordingUrl}}" />
-  <image class='tag' bindtap = "onPlay" src="{{playing?speakingUrl:noSpeakingUrl}}" />
+  <image src="{{st.image}}" class="classic-img {{playing?'rotation':''}}" />
+  <image class="player-img " bind:tap="onRecord" src="{{recording?recordingUrl:waitRecordingUrl}}" />
+  <view class="tag">
+    <image class='tag1' bindtap="onPlay" src="{{playing?speakingUrl:noSpeakingUrl}}" />
+    <image class='tag2' bindtap="onPlay2" src="{{playing2?speakingUrl:noSpeakingUrl}}" />
+  </view>
   <!-- <text class="content">{{content}}</text> -->
   <rich-text nodes="{{nodes}}" class="content"></rich-text>
 </view>
