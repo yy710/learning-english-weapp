@@ -1,30 +1,38 @@
 //import { classicBehavior } from '../classic-beh.js';
-const mMgr = wx.getBackgroundAudioManager();
-//const mMgr = wx.createInnerAudioContext();
-let st = {};
+//const mMgr = wx.getBackgroundAudioManager();
+let audio = wx.createInnerAudioContext();
 
 Component({
   //behaviors: [classicBehavior],
   properties: {
-    sentence:{
+    sentence: {
       type: Object,
       value: {},
-      observer: function (newVal, oldVal, changedPath){
-        st = newVal;
+      observer: function(newVal, oldVal, changedPath) {
         console.log("sentence newVal: ", newVal);
-        if(!newVal)return;
-        let _nodes = [];
-        let text_arr = newVal.text[1].split(" ").map(item => [item, 90]);
-        //console.log("text_arr: ", text_arr);
-        createNodes(newVal.text[0], text_arr, _nodes);
-        console.log("_nodes: ", _nodes);
-        this.setData({ st: newVal, nodes: _nodes });
+        if (!newVal) return;
+
+        audio.src = newVal.audio.src;
+        audio.startTime = newVal.audio.startTime;
+        audio.onTimeUpdate(() => {
+          if (audio.currentTime >= newVal.audio.endTime) audio.stop();
+        });
+        audio.onStop(() => {
+          this.setData({
+            playing: false
+          });
+        });
+
+        this.setData({
+          st: newVal,
+          nodes: st2nodes(newVal)
+        });
       }
     },
-    rate:{
+    rate: {
       type: Array,
       value: {},
-      observer: function (newVal, oldVal, changedPath){
+      observer: function(newVal, oldVal, changedPath) {
         console.log("rate changed: ", newVal);
       }
     }
@@ -34,18 +42,18 @@ Component({
     st: {},
     nodes: [],
     playing: false,
-    waittingUrl: 'images/player@waitting.png',
-    playingUrl: 'images/player@playing.png'
+    recording: false,
+    waitRecordingUrl: 'images/mic-outline2.png',
+    recordingUrl: 'images/mic-off-outline2.png',
+    speakingUrl: "images/speaker-gif-animation2.gif",
+    noSpeakingUrl: "images/speaker-gif-animation.png"
   },
 
   attached: function() {
-    //const st = this.properties.sentence;
-    mMgr.onTimeUpdate(() => {
-      //console.log(mMgr.currentTime);
-      if (mMgr.currentTime >= st.audio.endTime) mMgr.stop();
-    })
-    this._recoverPlaying()
-    this._monitorSwitch()
+    //const st = this.data.st;
+    //console.log("attached st: ", st);
+    //this._recoverPlaying()
+    //this._monitorSwitch()
   },
 
   detached: function() {
@@ -53,59 +61,17 @@ Component({
   },
 
   methods: {
-    onRecord: function(){
-
+    onRecord: function() {
+      const r = this.data.recording;
+      r?this.setData({recording:false}):this.setData({ recording: true });
     },
 
     onPlay: function(event) {
-      //const st = this.properties.sentence;
-      if(!st)return;
-      if (!this.data.playing) {
-        this.setData({ playing: true });
-        if (mMgr.src == st.audio.src) {
-          mMgr.play();
-        } else {
-          mMgr.src = st.audio.src;
-        }
-        mMgr.title = st.title;
-        mMgr.startTime = st.audio.startTime;
-      } else {
-        this.setData({ playing: false });
-        mMgr.pause();
-      }
-    },
-
-    _recoverPlaying: function() {
-      //const st = this.properties.sentence;
-      if(!st)return;
-      if (mMgr.paused) {
-        this.setData({
-          playing: false
-        })
-        return
-      }
-      if (mMgr.src == st.audio.src) {
-        if (!mMgr.paused) {
-          this.setData({
-            playing: true
-          })
-        }
-      }
-    },
-
-    _monitorSwitch: function() {
-      mMgr.onPlay(() => {
-        this._recoverPlaying()
-      })
-      mMgr.onPause(() => {
-        this._recoverPlaying()
-      })
-      mMgr.onStop(() => {
-          this._recoverPlaying()
-        }),
-        mMgr.onEnded(() => {
-          this._recoverPlaying()
-        })
+      audio.startTime = this.data.st.audio.startTime;
+      this.setData({
+        playing: audio.paused
+      });
+      audio.paused ? audio.play() : audio.pause();
     }
   }
 });
@@ -119,10 +85,10 @@ function createNodes(sentence = '', evaluations = [], results = []) {
   let end = start + word[0].length;
 
   //console.log("sentence.substring(0, start): ", sentence.substring(0, start));
-  if(start !== -1){
+  if (start !== -1) {
     pushWord(results, [sentence.substring(0, start)]);
     pushWord(results, word);
-  }else{
+  } else {
     end = 0;
   }
 
@@ -152,4 +118,11 @@ function pushWord(arrs, word) {
     }]
   });
   return arrs;
+}
+
+function st2nodes(sen) {
+  let _nodes = [];
+  let text_arr = sen.text[1].split(" ").map(item => [item]);
+  createNodes(sen.text[0], text_arr, _nodes);
+  return _nodes;
 }
