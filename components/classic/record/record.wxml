@@ -1,0 +1,1 @@
+<image class="record-img " bind:tap="onRecord" src="{{recording?recordingUrl:waitRecordingUrl}}" />

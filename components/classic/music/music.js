@@ -22,6 +22,11 @@ Component({
             playing: false
           });
         });
+        audio.onEnded(() => {
+          this.setData({
+            playing: false
+          });
+        });
 
         this.setData({
           st: newVal,
@@ -43,9 +48,7 @@ Component({
     nodes: [],
     playing: false,
     playing2: false,
-    recording: false,
-    waitRecordingUrl: 'images/record3.png',
-    recordingUrl: 'images/record10.gif',
+    showPlaying2: false,
     speakingUrl: "images/speaker-gif-animation2.gif",
     noSpeakingUrl: "images/speaker-gif-animation.png"
   },
@@ -62,11 +65,6 @@ Component({
   },
 
   methods: {
-    onRecord: function() {
-      const r = this.data.recording;
-      r?this.setData({recording:false}):this.setData({ recording: true });
-    },
-
     onPlay: function(event) {
       audio.startTime = this.data.st.audio.startTime;
       this.setData({
@@ -76,7 +74,18 @@ Component({
     },
 
     onPlay2: function(){
+      //播放录音
+      const innerAudioContext = wx.createInnerAudioContext();
+      innerAudioContext.autoplay = true;
+      innerAudioContext.src = this.data.recordFile;
+      innerAudioContext.onPlay(() => this.setData({ playing2: true }));
+      innerAudioContext.onEnded(() => this.setData({ playing2: false }));
+      innerAudioContext.onError(console.log);
+    },
 
+    newRecord(e){
+      console.log("newReccord event: ", e.detail);
+      this.setData({ showPlaying2: true, recordFile: e.detail });
     }
   }
 });

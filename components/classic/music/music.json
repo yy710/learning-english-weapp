@@ -1,4 +1,6 @@
 {
   "component": true,
-  "usingComponents": {}
+  "usingComponents": {
+    "record-cmp": "/components/classic/record/record"
+  }
 }

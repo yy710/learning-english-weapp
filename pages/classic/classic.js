@@ -4,53 +4,9 @@ import {ClassicModel} from '../../models/classic.js';
 import {LikeModel} from '../../models/like.js';
 let classicModel = new ClassicModel();
 let likeModel = new LikeModel();
-const recorderManager = wx.getRecorderManager();
-const innerAudioContext = wx.createInnerAudioContext();
 const app = getApp();
 const session = app.globalData.session;
 //console.log("app: ", app);
-
-// 显示繁忙提示
-var showBusy = text => wx.showToast({
-  title: text,
-  icon: 'loading',
-  duration: 10000
-});
-
-// 显示成功提示
-var showSuccess = text => wx.showToast({
-  title: text,
-  icon: 'success'
-});
-
-// 显示失败提示
-var showModel = (title, content) => {
-  wx.hideToast();
-  wx.showModal({
-    title,
-    content: JSON.stringify(content),
-    showCancel: false
-  });
-};
-
-recorderManager.onStart(() => {
-  console.log('recorder start')
-});
-//错误回调
-recorderManager.onError((res) => {
-  console.log(res);
-});
-recorderManager.onPause((res) => {
-  console.log('暂停录音')
-});
-recorderManager.onStart(() => {
-  console.log('重新开始录音')
-});
-recorderManager.onStop(res => {
-  this.tempFilePath = res.tempFilePath;
-  console.log('停止录音', res.tempFilePath);
-  //const { tempFilePath } = res;
-});
 
 let pageJson = {
   //页面的初始数据
@@ -67,44 +23,7 @@ let pageJson = {
     count: 0,
     sentences: []
   },
-  //开始录音
-  start: function () {
-    const options = {
-      duration: 10000, //指定录音的时长，单位 ms
-      sampleRate: 16000, //采样率
-      numberOfChannels: 1, //录音通道数
-      encodeBitRate: 96000, //编码码率
-      format: 'mp3', //音频格式，有效值 aac/mp3
-      frameSize: 50, //指定帧大小，单位 KB
-    };
-    recorderManager.start(options);
-  },
-  //暂停录音
-  pause: function () {
-    recorderManager.pause();
-  },
-  //继续录音
-  resume: function () {
-    recorderManager.resume();
-  },
-  //停止录音
-  stop: function () {
-    recorderManager.stop();
-  },
-  //播放录音
-  play: function () {
-    innerAudioContext.autoplay = true;
-    innerAudioContext.src = this.tempFilePath;
-    innerAudioContext.onPlay(() => console.log('开始播放'));
-    innerAudioContext.onError((res) => {
-      console.log(res.errMsg);
-      console.log(res.errCode);
-    });
-  },
-  //上传录音到服务器
-  upload: function () {
-    app.globalData.session.upload(this.tempFilePath).then(log("upload replay: ")).catch(console.log);
-  },
+  
   //生命周期函数--监听页面加载
   onLoad: function (options) {
     // 开始会话

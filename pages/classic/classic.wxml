@@ -12,17 +12,6 @@
   <music-cmp wx:if="{{classic.type==200}}" sentence = "{{sentences[1]}}" rate="{{[]}}" />
   <!-- <essay-cmp wx:if="{{classic.type==300}}" img="{{classic.image}}" content="{{classic.content}}" /> -->
   <navi-cmp class="navi" latest="{{latest}}" first="{{first}}" catch:left="onNext" catch:right="onPrevious" title="{{sentence[0].title}}" />
-
-  <view class="record">
-    <button bindtap="start" size='mini'>开始录音</button>
-    <!--
-    <button bindtap="pause" class='btn'>暂停录音</button>
-    <button bindtap="resume" class='btn'>继续录音</button>
-    -->
-    <button bindtap="stop" size='mini'>停止录音</button>
-    <button bindtap="play" size='mini'>播放录音</button>
-    <button bindtap="upload" size='mini'>上传录音</button>
-  </view>
 </view>
 <!-- <navigator target="miniProgram" app-id="wx8ffc97ad5bcccc89" open-type="navigate">sdasd</navigator> -->
 <!-- <button bind:tap="onIP">IP</button> -->
