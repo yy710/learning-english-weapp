@@ -24,6 +24,16 @@ let pageJson = {
     sentences: []
   },
   
+  newRecord2: function(e){
+    console.log("newRecord2 event: ", e.detail);
+    //上传录音到服务器
+    session.upload(e.detail)
+    .then(log("upload replay: "))
+    // change navi status of next for server rate
+    .then()
+    .catch(console.log);
+  },
+
   //生命周期函数--监听页面加载
   onLoad: function (options) {
     // 开始会话

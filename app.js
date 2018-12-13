@@ -1,15 +1,9 @@
-import {
-  config
-} from './config';
-import {
-  Session
-} from './models/sessions.js';
-import {
-  log
-} from './utils/util.js';
+import { config } from './config';
+import { Session } from './models/sessions.js';
+import { log } from './utils/util.js';
 
 App({
-  onLaunch() {
+  onLaunch: function() {
     this.globalData.session = new Session();
   },
   globalData: {

@@ -1,6 +1,7 @@
 //import { classicBehavior } from '../classic-beh.js';
-//const mMgr = wx.getBackgroundAudioManager();
-let audio = wx.createInnerAudioContext();
+const app = getApp();
+const session = app.globalData.session;
+const audio = wx.createInnerAudioContext();
 
 Component({
   //behaviors: [classicBehavior],
@@ -11,22 +12,15 @@ Component({
       observer: function(newVal, oldVal, changedPath) {
         console.log("sentence newVal: ", newVal);
         if (!newVal) return;
-
+        //set audio to newVal
         audio.src = newVal.audio.src;
         audio.startTime = newVal.audio.startTime;
         audio.onTimeUpdate(() => {
-          if (audio.currentTime >= newVal.audio.endTime) audio.stop();
+          if (audio.currentTime < audio.startTime) audio.seek(newVal.audio.startTime);// only for iphone bug of startTime invalid
+          else if (audio.currentTime >= newVal.audio.endTime) audio.stop();
         });
-        audio.onStop(() => {
-          this.setData({
-            playing: false
-          });
-        });
-        audio.onEnded(() => {
-          this.setData({
-            playing: false
-          });
-        });
+        audio.onStop(setPalying(this, false));
+        audio.onEnded(setPalying(this, false));
 
         this.setData({
           st: newVal,
@@ -36,7 +30,7 @@ Component({
     },
     rate: {
       type: Array,
-      value: {},
+      value: [],
       observer: function(newVal, oldVal, changedPath) {
         console.log("rate changed: ", newVal);
       }
@@ -50,14 +44,12 @@ Component({
     playing2: false,
     showPlaying2: false,
     speakingUrl: "images/speaker-gif-animation2.gif",
-    noSpeakingUrl: "images/speaker-gif-animation.png"
+    noSpeakingUrl: "images/speaker-gif-animation.png",
+    recordFile: ''
   },
 
   attached: function() {
-    //const st = this.data.st;
-    //console.log("attached st: ", st);
-    //this._recoverPlaying()
-    //this._monitorSwitch()
+
   },
 
   detached: function() {
@@ -66,15 +58,12 @@ Component({
 
   methods: {
     onPlay: function(event) {
-      audio.startTime = this.data.st.audio.startTime;
-      this.setData({
-        playing: audio.paused
-      });
-      audio.paused ? audio.play() : audio.pause();
+      this.setData({ playing: audio.paused });
+      audio.paused?audio.play():audio.pause();
     },
 
+    //playing recorded voice
     onPlay2: function(){
-      //播放录音
       const innerAudioContext = wx.createInnerAudioContext();
       innerAudioContext.autoplay = true;
       innerAudioContext.src = this.data.recordFile;
@@ -83,9 +72,10 @@ Component({
       innerAudioContext.onError(console.log);
     },
 
-    newRecord(e){
+    newRecord: function(e){
       console.log("newReccord event: ", e.detail);
       this.setData({ showPlaying2: true, recordFile: e.detail });
+      this.triggerEvent("newRecord2", e.detail);
     }
   }
 });
@@ -139,4 +129,10 @@ function st2nodes(sen) {
   let text_arr = sen.text[1].split(" ").map(item => [item]);
   createNodes(sen.text[0], text_arr, _nodes);
   return _nodes;
+}
+
+function setPalying(obj, bol) {
+  return function () {
+    obj.setData({ playing: bol });
+  };
 }

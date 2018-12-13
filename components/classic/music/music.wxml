@@ -5,6 +5,5 @@
     <image class='tag1' bindtap="onPlay" src="{{playing?speakingUrl:noSpeakingUrl}}" />
     <image wx:if="{{showPlaying2}}" class='tag2' bindtap="onPlay2" src="{{playing2?speakingUrl:noSpeakingUrl}}" />
   </view>
-  <!-- <text class="content">{{content}}</text> -->
   <rich-text nodes="{{nodes}}" class="content"></rich-text>
 </view>

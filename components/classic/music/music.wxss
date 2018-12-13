@@ -20,6 +20,7 @@
 
 .tag {
   display: flex;
+  width: 120rpx;
 }
 
 .tag1 {
@@ -61,7 +62,7 @@
   /* width:275px; *//* margin:0 auto; */
   max-width: 550rpx;
   font-size: 36rpx;
-  margin-top: -90rpx;
+  margin-top: -150rpx;
 }
 
 .classic-container {

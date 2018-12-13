@@ -24,8 +24,6 @@ Component({
     recorderManager.onStop(res => {
       console.log('停止录音', res.tempFilePath);
       this.triggerEvent("newRecord", res.tempFilePath);
-      //上传录音到服务器
-      //app.globalData.session.upload(this.tempFilePath).then(log("upload replay: ")).catch(console.log);
     });
   },
 

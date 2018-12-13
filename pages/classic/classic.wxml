@@ -9,9 +9,7 @@
     </view>
   </view>
   <!-- <movie-cmp wx:if="{{classic.type==100}}" img="{{classic.image}}" content="{{classic.content}}" /> -->
-  <music-cmp wx:if="{{classic.type==200}}" sentence = "{{sentences[1]}}" rate="{{[]}}" />
   <!-- <essay-cmp wx:if="{{classic.type==300}}" img="{{classic.image}}" content="{{classic.content}}" /> -->
-  <navi-cmp class="navi" latest="{{latest}}" first="{{first}}" catch:left="onNext" catch:right="onPrevious" title="{{sentence[0].title}}" />
+  <music-cmp wx:if="{{classic.type==200}}" sentence = "{{sentences[1]}}" rate="{{[]}}" bind:newRecord2="newRecord2" />
+  <navi-cmp class="navi" latest="{{latest}}" first="{{first}}" catch:left="onNext" catch:right="onPrevious" title="{{sentences[1].title}}" />
 </view>
-<!-- <navigator target="miniProgram" app-id="wx8ffc97ad5bcccc89" open-type="navigate">sdasd</navigator> -->
-<!-- <button bind:tap="onIP">IP</button> -->
