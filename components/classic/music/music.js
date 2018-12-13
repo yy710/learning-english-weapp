@@ -16,7 +16,8 @@ Component({
         audio.src = newVal.audio.src;
         audio.startTime = newVal.audio.startTime;
         audio.onTimeUpdate(() => {
-          if (audio.currentTime < audio.startTime) audio.seek(newVal.audio.startTime);// only for iphone bug of startTime invalid
+          console.log("audio.currentTime: ", audio.currentTime);
+          if (audio.currentTime < audio.startTime) audio.seek(audio.startTime);// only for iphone bug of startTime invalid
           else if (audio.currentTime >= newVal.audio.endTime) audio.stop();
         });
         audio.onStop(setPalying(this, false));
