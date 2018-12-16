@@ -16,10 +16,11 @@ Component({
         //set audio to newVal
         audio.src = newVal.audio.src;
         audio.startTime = newVal.audio.startTime;
+        //sync function
         audio.onTimeUpdate(() => {
           console.log("audio.currentTime: ", audio.currentTime);
-          if (audio.currentTime < audio.startTime) audio.seek(audio.startTime);// only for iphone bug of startTime invalid
-          else if (audio.currentTime >= newVal.audio.endTime) audio.stop();
+          if (audio.currentTime >= newVal.audio.endTime) audio.stop();
+          else if (audio.currentTime < newVal.audio.startTime) audio.seek(newVal.audio.startTime);// only for iphone bug of startTime invalid
         });
         audio.onStop(()=>this.setData({playing:false}));
         audio.onEnded(()=>this.setData({playing:false}));
