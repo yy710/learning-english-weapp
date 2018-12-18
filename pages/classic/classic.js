@@ -11,12 +11,6 @@ const session = app.globalData.session;
 let pageJson = {
   //页面的初始数据
   data: {
-    classic: {
-      type: 200,
-      image: config.api_blink_url + '/images/001.png',
-      url: config.api_blink_url + '/audio/01intoWoods.mp3',
-      title: 'Dinosaurs Before Dark'
-    },
     latest: true,
     first: false,
     like: false,
@@ -40,7 +34,7 @@ let pageJson = {
     session.start()
       .then(res => {
         session.sid = res;
-        return session.request('/get-sentence')()
+        return session.request('/get-sentence')({id:5})
           .then(log("get-sentence: "))
           .then(res => this.setData({
             sentences: res.data

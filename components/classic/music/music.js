@@ -18,7 +18,7 @@ Component({
         audio.startTime = newVal.audio.startTime;
         //sync function
         audio.onTimeUpdate(() => {
-          console.log("audio.currentTime: ", audio.currentTime);
+          //console.log("audio.currentTime: ", audio.currentTime);
           if (audio.currentTime >= newVal.audio.endTime) audio.stop();
           else if (audio.currentTime < newVal.audio.startTime) audio.seek(newVal.audio.startTime);// only for iphone bug of startTime invalid
         });
