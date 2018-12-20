@@ -1,6 +1,10 @@
-import { _request } from '../utils/http.js';
+import {
+  _request
+} from '../utils/http.js';
 const log = require('../utils/util.js').log;
-import { config } from '../config.js';
+import {
+  config
+} from '../config.js';
 
 class Session {
   constructor() {
@@ -11,12 +15,14 @@ class Session {
   /**
    * The function will  be set dynamically 
    */
-  request(){ return Promise.reject("session.request no init!"); }
+  request() {
+    return Promise.reject("session.request no init!");
+  }
 
-  upload(tempFilePath){
+  upload(tempFilePath) {
     let that = this;
     console.log("(befor upload)this.sid: ", that.sid);
-    return new Promise(function(resolve, reject){
+    return new Promise(function(resolve, reject) {
       wx.uploadFile({
         url: `${config.api_blink_url}/upload`,
         filePath: tempFilePath,
@@ -30,11 +36,11 @@ class Session {
         formData: {
           'sentenceId': 1 //其他额外的formdata，可不写
         },
-        success: function (res) {
+        success: function(res) {
           console.log("upload success: ", res);
           resolve(res);
         },
-        fail: function (res) {
+        fail: function(res) {
           console.log('fail:', res);
           reject(res);
         }
@@ -66,14 +72,19 @@ class Session {
 
   login() {
     return wxlogin()
-      .then(this.request("/login"))
+      .then(this.request("/login"))//send to server
       .then(log("server reply for login: "))
-      .then(res =>{
-        if(!res.data.sid)return Promise.reject("server error!");
-        wx.setStorageSync('sid', res.data.sid);
-        return this.sid = res.data.sid;
+      .then(res => {
+        if (!res.data.sid) {
+          return Promise.reject("server error for '/login' !");
+        } else {
+          //save sid to local
+          wx.setStorageSync('sid', res.data.sid);
+          this.sid = res.data.sid;
+          return this;
+        }
       })
-      .catch(log('catch error in login method: '));
+      .catch(log('catch error in session.login(): '));
   }
 
   start() {
@@ -85,7 +96,8 @@ class Session {
           return this.login();
         } else {
           this.request = _request(res[1]);
-          return this.sid = res[1];
+          this.sid = res[1];
+          return this;
         }
       })
       .catch(log("catch from start method: "));
@@ -101,4 +113,6 @@ function wxlogin() {
   });
 }
 
-export { Session };
+export {
+  Session
+};
