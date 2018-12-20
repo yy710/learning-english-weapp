@@ -25,7 +25,7 @@ let pageJson = {
     count: 0,
     sentences: [],
     //musci component will error if set to {}
-    currentSentence: null
+    sIndex: null
   },
 
   newRecord2: function(e) {
@@ -50,7 +50,7 @@ let pageJson = {
           .then(res => {
             this.setData({
               sentences: res.data,
-              currentSentence: res.data[1]
+              sIndex: 1
             });
           })
       })
@@ -114,3 +114,16 @@ let pageJson = {
 };
 
 Page(pageJson);
+/**
+ * @s arrary sentences
+ * @c int current sentence index
+ * @return: array
+ */
+function nav(s, c){
+  let r = [false, false];
+  if(s.length > 1){
+    if(c > 0)r[0]=true;
+    if(c < s.length-1 )r[1]=true
+  }
+  return r;
+}
