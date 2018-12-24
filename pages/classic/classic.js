@@ -24,7 +24,7 @@ let pageJson = {
     like: false,
     count: 0,
     sentences: [],
-    //musci component will error if set to {}
+    //music component will error if set to {}
     sIndex: null
   },
 
@@ -50,20 +50,11 @@ let pageJson = {
           .then(res => {
             this.setData({
               sentences: res.data,
-              sIndex: 1
+              sIndex: 0
             });
           })
       })
       .catch(log("session.start catch error: "));
-
-    classicModel.getLatest(data => {
-      this._getLikeStatus(data.id, data.type);
-      this.setData({
-        classic: {
-          type: 300
-        }
-      });
-    });
   },
 
   onPrevious: function(event) {
