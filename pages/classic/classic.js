@@ -1,15 +1,7 @@
-import {
-  log
-} from '../../utils/util.js';
-import {
-  config
-} from '../../config.js';
-import {
-  ClassicModel
-} from '../../models/classic.js';
-import {
-  LikeModel
-} from '../../models/like.js';
+import {log} from '../../utils/util.js';
+import {config} from '../../config.js';
+import {ClassicModel} from '../../models/classic.js';
+import {LikeModel} from '../../models/like.js';
 let classicModel = new ClassicModel();
 let likeModel = new LikeModel();
 const app = getApp();
@@ -45,7 +37,7 @@ let pageJson = {
       .then(log("session.start(); "))
       .then(res => {
         //res == session
-        return res.request('/get-sentence')()
+        return res.request('/get-sentence')({id: 3})
           .then(log("/get-sentence: "))
           .then(res => {
             this.setData({
