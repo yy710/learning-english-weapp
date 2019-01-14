@@ -11,5 +11,5 @@
   <!-- <movie-cmp wx:if="{{classic.type==100}}" img="{{classic.image}}" content="{{classic.content}}" /> -->
   <!-- <essay-cmp wx:if="{{classic.type==300}}" img="{{classic.image}}" content="{{classic.content}}" /> -->
   <music-cmp sentence = "{{sentences[sIndex]}}" rate="{{[]}}" bind:newRecord2="newRecord2" />
-  <navi-cmp class="navi" latest="{{latest}}" first="{{first}}" catch:left="onNext" catch:right="onPrevious" title="{{sentences[sIndex].title}}" />
+  <navi-cmp class="navi" latest="{{latest}}" first="{{first}}" catch:left="onPrevious" catch:right="onNext" title="{{sentences[sIndex].title}}" />
 </view>

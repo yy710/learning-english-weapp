@@ -37,19 +37,29 @@ let pageJson = {
       .then(log("session.start(); "))
       .then(res => {
         //res == session
-        return res.request('/get-sentence')({id: 3})
-          .then(log("/get-sentence: "))
-          .then(res => {
-            this.setData({
-              sentences: res.data,
-              sIndex: 0
-            });
-          })
+        return res.request('/get-sentence')({id: 3});
+      })
+      .then(log("/get-sentence: "))
+      .then(res => {
+        this.setData({
+          sentences: res.data.sentences,
+          sIndex: res.data.lastIndex + 1,
+          latest: res.data.length <= 2,
+          first: res.data.lastIndex == -1
+        });
       })
       .catch(log("session.start catch error: "));
   },
 
   onPrevious: function(event) {
+    let c = this.data.sIndex - 1;
+    this.setData({
+      sIndex: c,
+      first: c == 0,
+      latest: c == this.data.sentences.length - 1,
+      });
+
+    /*
     let index = this.data.classic.index
     classicModel.getPrevious(index, (data) => {
       if (data) {
@@ -63,9 +73,17 @@ let pageJson = {
         console.log('not more classic')
       }
     })
+    */
   },
 
   onNext: function(event) {
+    let c = this.data.sIndex + 1;
+    this.setData({
+      sIndex: c,
+      latest: c == this.data.sentences.length - 1,
+      first: c == 0
+      });
+    /*
     let index = this.data.classic.index
     classicModel.getNext(index, (data) => {
       if (data) {
@@ -79,6 +97,7 @@ let pageJson = {
         console.log('not more classic')
       }
     })
+    */
   },
 
   onLike: function(event) {

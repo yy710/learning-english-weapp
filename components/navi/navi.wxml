@@ -1,8 +1,5 @@
-<!--components/navi/navi.wxml-->
 <view class='container'>
-  <image class="navi-icon navi-left" bind:tap="onLeft"          
-    src="{{latest?disLeftSrc:highLeftSrc}}" />
+  <image class="navi-icon navi-left" bind:tap="onLeft" src="{{first?disLeftSrc:highLeftSrc}}" />
   <text class="title">{{title}}</text>
-  <image class="navi-icon navi-right" disable="{{!first}}" bind:tap='onRight"
-    src="{{first?'images/triangle.dis@right.png':'images/triangle@right.png'}}" />
+  <image class="navi-icon navi-right" bind:tap="onRight" src="{{latest?disRightSrc:highRightSrc}}" />
 </view>

@@ -12,10 +12,7 @@ Component({
       type:Boolean,
       value:false,
       observer:function(){
-        // console.log('111111')
-        // this.setData({
-        //   latest:this.properties.latest
-        // })
+    
       }
     },
     first:{
@@ -32,7 +29,9 @@ Component({
    */
   data: {
     disLeftSrc: 'images/triangle.dis@left.png',
-    highLeftSrc: 'images/triangle@left.png'
+    highLeftSrc: 'images/triangle@left.png',
+    disRightSrc: 'images/triangle.dis@right.png',
+    highRightSrc: 'images/triangle@right.png'
   },
 
   /**
@@ -40,12 +39,12 @@ Component({
    */
   methods: {
     onLeft:function(){
-      if(!this.properties.latest){
+      if(!this.properties.first){
         this.triggerEvent('left', {}, {})
       }
     },
     onRight:function(){
-      if(!this.properties.first){
+      if(!this.properties.latest){
         this.triggerEvent('right', {}, {})
       }   
     }
