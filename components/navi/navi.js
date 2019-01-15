@@ -8,7 +8,7 @@ Component({
       type:String,
       value:'...',
     },
-    latest:{
+    next:{
       type:Boolean,
       value:false,
       observer:function(){
@@ -44,7 +44,7 @@ Component({
       }
     },
     onRight:function(){
-      if(!this.properties.latest){
+      if(this.properties.next){
         this.triggerEvent('right', {}, {})
       }   
     }

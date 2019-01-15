@@ -11,7 +11,7 @@ const session = app.globalData.session;
 let pageJson = {
   //页面的初始数据
   data: {
-    latest: true,
+    next: false,
     first: false,
     like: false,
     count: 0,
@@ -34,31 +34,27 @@ let pageJson = {
   onLoad: function(options) {
     // 开始会话
     session.start()
-      .then(log("session.start(); "))
-      .then(res => {
-        //res == session
-        return res.request('/get-sentence')({id: 3});
-      })
+      .then(log("session.start(): "))
+      //res == session
+      .then(this.getLatestSentence)
       .then(log("/get-sentence: "))
       .then(res => {
         this.setData({
-          sentences: res.data.sentences,
-          sIndex: res.data.lastIndex + 1,
-          latest: res.data.length <= 2,
-          first: res.data.lastIndex == -1
+          sentence: res.data.sentence,
+          first: res.data.sentence.previousId === 0
         });
       })
       .catch(log("session.start catch error: "));
   },
 
-  onPrevious: function(event) {
-    let c = this.data.sIndex - 1;
-    this.setData({
-      sIndex: c,
-      first: c == 0,
-      latest: c == this.data.sentences.length - 1,
-      });
+  //get will reading (latest data)
+  getLatestSentence: function(session){
+    return session.request('/get-sentence')({ action: "latest" });
+  },
 
+  onPrevious: function(event) {
+    console.log(event);
+    this.setData({ next: true });
     /*
     let index = this.data.classic.index
     classicModel.getPrevious(index, (data) => {
@@ -77,12 +73,8 @@ let pageJson = {
   },
 
   onNext: function(event) {
-    let c = this.data.sIndex + 1;
-    this.setData({
-      sIndex: c,
-      latest: c == this.data.sentences.length - 1,
-      first: c == 0
-      });
+    console.log(event);
+    this.setData({ next: false });
     /*
     let index = this.data.classic.index
     classicModel.getNext(index, (data) => {
