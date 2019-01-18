@@ -25,19 +25,19 @@
         "pagePath": "pages/classic/classic",
         "selectedIconPath": "/images/tab/classic@highlight.png",
         "iconPath": "/images/tab/classic.png",
-        "text": "流行"
+        "text": "跟读"
       },
       {
         "pagePath": "pages/book/book",
         "selectedIconPath": "/images/tab/book@highlight.png",
         "iconPath": "/images/tab/book.png",
-        "text": "书单"
+        "text": "排行榜"
       },
       {
         "pagePath": "pages/my/my",
         "selectedIconPath": "/images/tab/my@highlight.png",
         "iconPath": "/images/tab/my.png",
-        "text": "喜欢"
+        "text": "我的"
       }
     ]
   }
