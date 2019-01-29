@@ -52,6 +52,18 @@ let pageJson = {
     return session.request('/get-sentence')({ action: "latest" });
   },
 
+  getPreviousSentence: function(){
+
+  },
+
+  getNextSentence: function(){
+
+  },
+
+  setNavStatus: function(){
+
+  },
+
   onPrevious: function(event) {
     console.log(event);
     this.setData({ next: true });
@@ -108,7 +120,10 @@ let pageJson = {
 };
 
 Page(pageJson);
+
+
 /**
+ * nav function
  * @s arrary sentences
  * @c int current sentence index
  * @return: array
