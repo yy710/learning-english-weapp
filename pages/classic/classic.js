@@ -15,8 +15,8 @@ let pageJson = {
     first: false,
     like: false,
     count: 0,
-    sentence: {},
     //music component will error if set to {}
+    sentence: null,
     sIndex: null
   },
 
@@ -49,15 +49,15 @@ let pageJson = {
 
   //get will reading (latest data)
   getLatestSentence: function(session){
-    return session.request('/get-sentence')({ id: this.data.sentence.id, action: "latest" });
+    return session.request('/get-latest-sentence')({ });
   },
 
   getPreviousSentence: function(){
-    return session.request('/get-sentence')({ action: "previous" });
+    return session.request('/get-previous-sentence')({ id: 3 });
   },
 
   getNextSentence: function(){
-    return session.request('/get-sentence')({ action: "next" });
+    return session.request('/get-next-sentence')({ id: 3 });
   },
 
   setNavStatus: function(){
@@ -65,7 +65,8 @@ let pageJson = {
   },
 
   onPrevious: function(event) {
-    console.log(event);
+    //console.log(event);
+    this.getPreviousSentence().then(log("getPreviousSentence(): "));
     this.setData({ next: true });
     /*
     let index = this.data.classic.index
@@ -85,7 +86,8 @@ let pageJson = {
   },
 
   onNext: function(event) {
-    console.log(event);
+    //console.log(event);
+    this.getNextSentence().then(log("getNextSentence(): "));
     this.setData({ next: false });
     /*
     let index = this.data.classic.index
