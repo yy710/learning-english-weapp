@@ -8,7 +8,7 @@ const app = getApp();
 const session = app.globalData.session;
 //console.log("app: ", app);
 
-let pageJson = {
+Page({
   //页面的初始数据
   data: {
     next: false,
@@ -17,21 +17,25 @@ let pageJson = {
     count: 0,
     //music component will error if set to {}
     sentence: null,
-    sIndex: null
+    sIndex: null,
+    rate: []
   },
 
-  newRecord2: function(e) {
+  newRecord2: function (e) {
     console.log("newRecord2 event: ", e.detail);
     //上传录音到服务器
     session.upload(e.detail)
       .then(log("upload replay: "))
       // change navi status of next for server rate
-      .then()
+      .then(res =>{
+        const _res = JSON.parse(res.data);
+        this.setData({ rate: _res.rate, next: _res.next });
+      })
       .catch(console.log);
   },
 
   //生命周期函数--监听页面加载
-  onLoad: function(options) {
+  onLoad: function (options) {
     // 开始会话
     session.start()
       .then(log("session.start(): "))
@@ -41,33 +45,38 @@ let pageJson = {
       .then(res => {
         this.setData({
           sentence: res.data.sentence,
-          first: res.data.sentence.previousId === 0
+          first: res.data.sentence.previousId === 0 || !res.data.previous
         });
       })
       .catch(log("session.start catch error: "));
   },
 
   //get will reading (latest data)
-  getLatestSentence: function(session){
-    return session.request('/get-latest-sentence')({ });
+  getLatestSentence: function (session) {
+    return session.request('/get-latest-sentence')({});
   },
 
-  getPreviousSentence: function(){
-    return session.request('/get-previous-sentence')({ id: 3 });
+  getPreviousSentence: function () {
+    return session.request('/get-previous-sentence')({ id: this.data.sentence.id });
   },
 
-  getNextSentence: function(){
-    return session.request('/get-next-sentence')({ id: 3 });
+  getNextSentence: function () {
+    return session.request('/get-next-sentence')({ id: this.data.sentence.id });
   },
 
-  setNavStatus: function(){
+  setNavStatus: function () {
 
   },
 
-  onPrevious: function(event) {
+  onPrevious: function (event) {
     //console.log(event);
-    this.getPreviousSentence().then(log("getPreviousSentence(): "));
-    this.setData({ next: true });
+    this.getPreviousSentence()
+    .then(log("getPreviousSentence(): "))
+    .then(res=>{
+      this.setData({ next: res.data.next, first: !res.data.previous, sentence: res.data.sentence });
+      return res;
+    }).catch(log("error: "));
+
     /*
     let index = this.data.classic.index
     classicModel.getPrevious(index, (data) => {
@@ -85,10 +94,14 @@ let pageJson = {
     */
   },
 
-  onNext: function(event) {
+  onNext: function (event) {
     //console.log(event);
-    this.getNextSentence().then(log("getNextSentence(): "));
-    this.setData({ next: false });
+    this.getNextSentence().then(log("getNextSentence(): "))
+      .then(res => {
+        this.setData({ next: res.data.next, first: !res.data.previous, sentence: res.data.sentence });
+        return res;
+      }).catch(log("error: "));
+
     /*
     let index = this.data.classic.index
     classicModel.getNext(index, (data) => {
@@ -106,12 +119,12 @@ let pageJson = {
     */
   },
 
-  onLike: function(event) {
+  onLike: function (event) {
     let like_or_cancel = event.detail.behavior;
     likeModel.like(like_or_cancel, this.data.classic.id, this.data.classic.type);
   },
 
-  _getLikeStatus: function(cid, type) {
+  _getLikeStatus: function (cid, type) {
     likeModel.getClassicLikeStatus(cid, type, data => {
       this.setData({
         like: data.like_status,
@@ -119,9 +132,7 @@ let pageJson = {
       });
     })
   }
-};
-
-Page(pageJson);
+})
 
 
 /**

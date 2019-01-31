@@ -37,7 +37,7 @@ class Session {
           'sentenceId': 1 //其他额外的formdata，可不写
         },
         success: function(res) {
-          console.log("upload success: ", res);
+          //console.log("upload success: ", res);
           resolve(res);
         },
         fail: function(res) {

@@ -1,7 +1,7 @@
 <view class="container">
   <image src="/images/my/my@bg.png" class="bg"></image>
   <img-btn-cmp wx:if="{{!hasUserInfo}}" open-type="getUserInfo" class="avatar-position" bind:getuserinfo="onGetUserInfo">
-     <image slot="img" class="avatar" src="/images/my/my.png" /> 
+    <image slot="img" class="avatar" src="/images/my/my.png" />
   </img-btn-cmp>
   <view class="avatar-container avatar-position">
     <image src="{{userInfo.avatarUrl}}" wx:if="{{hasUserInfo}}" class="avatar" />
@@ -14,7 +14,7 @@
     </view>
     <view class="about-us">
       <text class="book-num">{{myBooksCount}}</text>
-      <text class="description">喜欢的书</text>
+      <text class="description">我的总成绩</text>
     </view>
   </view>
   <view class="like-container">

@@ -37,6 +37,14 @@ Component({
       value: [],
       observer: function(newVal, oldVal, changedPath) {
         console.log("rate changed: ", newVal);
+        if (newVal === [] || !this.properties.sentence)return;
+
+        let _nodes = [];
+        createNodes(this.properties.sentence.text[0], newVal, _nodes);
+
+        this.setData({
+          nodes: _nodes
+        });
       }
     }
   },
@@ -80,6 +88,7 @@ Component({
   }
 });
 
+//evaluations: [ ["is", 50], ["he", 90], ... ]
 function createNodes(sentence = '', evaluations = [], results = []) {
   //console.log("sentence: ", sentence);
   if (sentence.length === 0 || evaluations.length === 0) return;
@@ -90,8 +99,8 @@ function createNodes(sentence = '', evaluations = [], results = []) {
 
   //console.log("sentence.substring(0, start): ", sentence.substring(0, start));
   if (start !== -1) {
-    pushWord(results, [sentence.substring(0, start)]);
-    pushWord(results, word);
+    pushWord(results, [sentence.substring(0, start)]);//处理标点符号
+    pushWord(results, word);//处理单词评分
   } else {
     end = 0;
   }
@@ -126,7 +135,7 @@ function pushWord(arrs, word) {
 
 function st2nodes(sen) {
   let _nodes = [];
-  let text_arr = sen.text[1].split(" ").map(item => [item]);
+  let text_arr = sen.text[1].split(" ").map(item => [item]);//转多维数组
   createNodes(sen.text[0], text_arr, _nodes);
   return _nodes;
 }

@@ -10,6 +10,6 @@
   </view>
   <!-- <movie-cmp wx:if="{{classic.type==100}}" img="{{classic.image}}" content="{{classic.content}}" /> -->
   <!-- <essay-cmp wx:if="{{classic.type==300}}" img="{{classic.image}}" content="{{classic.content}}" /> -->
-  <music-cmp sentence = "{{sentence}}" rate="{{[]}}" bind:newRecord2="newRecord2" />
+  <music-cmp sentence = "{{sentence}}" rate="{{rate}}" bind:newRecord2="newRecord2" />
   <navi-cmp class="navi" next="{{next}}" first="{{first}}" catch:left="onPrevious" catch:right="onNext" title="{{sentence.title}}" />
 </view>
