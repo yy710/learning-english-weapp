@@ -41,7 +41,7 @@ class Session {
           resolve(res);
         },
         fail: function(res) {
-          console.log('fail:', res);
+          //console.log('fail:', res);
           reject(res);
         }
       });
@@ -72,7 +72,7 @@ class Session {
 
   login() {
     return wxlogin()
-      .then(this.request("/login"))//send to server
+      .then(this.request("/login")) //send to server
       .then(log("server reply for login: "))
       .then(res => {
         if (!res.data.sid) {
@@ -104,6 +104,9 @@ class Session {
   }
 }
 
+/**
+ * encapsulated as a Promise function
+ */
 function wxlogin() {
   return new Promise((resolve, reject) => {
     wx.login({

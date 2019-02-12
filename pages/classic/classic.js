@@ -14,7 +14,6 @@ let classicModel = new ClassicModel();
 let likeModel = new LikeModel();
 const app = getApp();
 const session = app.globalData.session;
-//console.log("app: ", app);
 
 Page({
   //页面的初始数据
@@ -131,10 +130,10 @@ function nav(s, c) {
   return r;
 }
 
-//package this.setData function
-function setData(that, obj){
-  return new Promise(function(resolve, reject){
-    that.setData(obj, function(){
+//package this.setData function to Promise
+function setData(that, obj) {
+  return new Promise(function(resolve, reject) {
+    that.setData(obj, function() {
       resolve("setData ok!");
     });
   });
