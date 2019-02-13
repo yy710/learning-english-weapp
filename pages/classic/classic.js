@@ -48,7 +48,7 @@ Page({
     // 开始会话
     session.start()
       .then(log("session.start(): "))
-      //res == session
+      //res == session object
       .then(this.getLatestSentence)
       .then(log("/get-sentence: "))
       .then(this.setNavStatus)

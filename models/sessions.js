@@ -92,6 +92,7 @@ class Session {
       .then(log('Promise.all() return: '))
       .then(res => {
         if (res[0] === false || res[1] === false) {
+          //craete a new function
           this.request = _request();
           return this.login();
         } else {
@@ -100,7 +101,7 @@ class Session {
           return this;
         }
       })
-      .catch(log("catch from start method: "));
+      .catch(log("catch errors from session.start method: "));
   }
 }
 
