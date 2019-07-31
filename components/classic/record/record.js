@@ -37,10 +37,10 @@ Component({
         this.setData({ recording: true });
          //开始录音
         const options = {
-          duration: 10000, //指定录音的时长，单位 ms
+          duration: 20000, //指定录音的时长，单位 ms
           sampleRate: 16000, //采样率
           numberOfChannels: 1, //录音通道数
-          encodeBitRate: 96000, //编码码率
+          encodeBitRate: 48000, //编码码率
           format: 'mp3', //音频格式，有效值 aac/mp3
           frameSize: 50, //指定帧大小，单位 KB
         };

@@ -1,7 +1,7 @@
 //import { classicBehavior } from '../classic-beh.js';
 const app = getApp();
 const session = app.globalData.session;
-const audio = wx.createInnerAudioContext();
+let audio = wx.createInnerAudioContext();
 const audio2 = wx.createInnerAudioContext();
 
 Component({
@@ -15,19 +15,26 @@ Component({
         if (!newVal) return;
         //set audio to newVal
         audio.src = newVal.audio.src;
-        audio.startTime = newVal.audio.startTime;
+        //audio.startTime = newVal.audio.startTime;
+        audio.seek(newVal.audio.startTime);
         //sync function
         audio.onTimeUpdate(() => {
           //console.log("audio.currentTime: ", audio.currentTime);
-          if (audio.currentTime >= newVal.audio.endTime) audio.stop();
-          else if (audio.currentTime < newVal.audio.startTime) audio.seek(newVal.audio.startTime);// only for iphone bug of startTime invalid
+          if (audio.currentTime >= newVal.audio.endTime){
+            audio.seek(newVal.audio.startTime);
+          }
         });
-        audio.onStop(()=>this.setData({playing:false}));
-        audio.onEnded(()=>this.setData({playing:false}));
-        audio2.onEnded(()=>this.setData({playing2:false}));
+        audio.onPause(() => this.setData({ playing: false }));
+        audio.onEnded(() => {
+          //this.setData({ playing: false });
+          audio.seek(newVal.audio.startTime);
+        });
+        audio2.onEnded(()=>{
+          this.setData({ playing2: false });
+        });
 
         this.setData({
-          st: newVal,
+          stImage: newVal.image,
           nodes: st2nodes(newVal)
         });
       }
@@ -50,7 +57,6 @@ Component({
   },
 
   data: {
-    st: {},
     nodes: [],
     playing: false,
     playing2: false,

@@ -9,10 +9,19 @@
 		"postcss": true,
 		"minified": false,
 		"newFeature": true,
-		"nodeModules": false
+		"nodeModules": false,
+		"checkInvalidKey": true,
+		"checkSiteMap": true,
+		"uploadWithSourceMap": true,
+		"babelSetting": {
+			"ignore": [],
+			"disablePlugins": [],
+			"outputPath": ""
+		},
+		"autoAudits": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.6.2",
+	"libVersion": "2.7.7",
 	"appid": "wxedad6d5932ef4149",
 	"projectname": "%E5%AD%A6%E8%8B%B1%E8%AF%AD%E7%9A%84%E9%B1%BC",
 	"isGameTourist": false,

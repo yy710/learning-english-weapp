@@ -1,15 +1,7 @@
-import {
-  log
-} from '../../utils/util.js';
-import {
-  config
-} from '../../config.js';
-import {
-  ClassicModel
-} from '../../models/classic.js';
-import {
-  LikeModel
-} from '../../models/like.js';
+import { log } from '../../utils/util.js';
+import { config } from '../../config.js';
+import { ClassicModel } from '../../models/classic.js';
+import { LikeModel } from '../../models/like.js';
 let classicModel = new ClassicModel();
 let likeModel = new LikeModel();
 const app = getApp();
@@ -35,6 +27,19 @@ Page({
       // change navi status of next for server rate
       .then(res => {
         const _res = JSON.parse(res.data);
+
+        wx.showModal({
+          title: '评测结果',
+          content: `本次朗读完成度${_res.pronCompletion*100}分，流利度${Math.round(_res.pronFluency*100)}分，准确度${Math.round(_res.pronAccuracy)}分`,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+
         this.setData({
           rate: _res.rate,
           next: _res.next
@@ -84,6 +89,9 @@ Page({
     });
   },
 
+  /**
+   * handle triggerEvent frome componet navi
+   */
   onPrevious: function(event) {
     //console.log(event);
     this.getPreviousSentence()
