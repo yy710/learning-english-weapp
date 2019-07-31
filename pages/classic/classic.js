@@ -22,7 +22,7 @@ Page({
   newRecord2: function(e) {
     console.log("newRecord2 event: ", e.detail);
     //上传录音到服务器
-    session.upload(e.detail)
+    session.upload(e.detail, this.data.sentence.id)
       .then(log("upload replay: "))
       // change navi status of next for server rate
       .then(res => {
@@ -30,7 +30,7 @@ Page({
 
         wx.showModal({
           title: '评测结果',
-          content: `本次朗读完成度${_res.pronCompletion*100}分，流利度${Math.round(_res.pronFluency*100)}分，准确度${Math.round(_res.pronAccuracy)}分`,
+          content: `本次朗读完成度${Math.round(_res.pronCompletion*100)}分，流利度${Math.round(_res.pronFluency*100)}分，准确度${Math.round(_res.pronAccuracy)}分`,
           success(res) {
             if (res.confirm) {
               console.log('用户点击确定')
@@ -38,7 +38,7 @@ Page({
               console.log('用户点击取消')
             }
           }
-        })
+        });
 
         this.setData({
           rate: _res.rate,

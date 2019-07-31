@@ -19,7 +19,7 @@ class Session {
     return Promise.reject("session.request no init!");
   }
 
-  upload(tempFilePath) {
+  upload(tempFilePath, sentenceId) {
     let that = this;
     console.log("(befor upload)this.sid: ", that.sid);
     return new Promise(function(resolve, reject) {
@@ -34,7 +34,7 @@ class Session {
           'sid': that.sid //若有token，此处换上你的token，没有的话省略
         },
         formData: {
-          'sentenceId': 1 //其他额外的formdata，可不写
+          'sentenceId': sentenceId || 1 //其他额外的formdata，可不写
         },
         success: function(res) {
           //console.log("upload success: ", res);

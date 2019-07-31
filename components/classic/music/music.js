@@ -30,7 +30,20 @@ Component({
           audio.seek(newVal.audio.startTime);
         });
         audio2.onEnded(()=>{
+          const that = this;
           this.setData({ playing2: false });
+          wx.showModal({
+            title: '提示',
+            content: '是否上传音频进行评测打分？',
+            success(res) {
+              if (res.confirm) {
+                console.log('用户点击确定');
+                that.triggerEvent("newRecord2", that.data.recordFile);
+              } else if (res.cancel) {
+                console.log('用户点击取消');
+              }
+            }
+          })
         });
 
         this.setData({
@@ -62,7 +75,8 @@ Component({
     playing2: false,
     showPlaying2: false,
     speakingUrl: "images/speaker-gif-animation2.gif",
-    noSpeakingUrl: "images/speaker-gif-animation.png"
+    noSpeakingUrl: "images/speaker-gif-animation.png",
+    recordFile: null
   },
 
   attached: function() {
@@ -89,7 +103,8 @@ Component({
       console.log("newReccord event: ", e.detail);
       this.setData({ showPlaying2: true });
       audio2.src = e.detail;
-      this.triggerEvent("newRecord2", e.detail);
+      //this.triggerEvent("newRecord2", e.detail);
+      this.setData({recordFile: e.detail});
     }
   }
 });
